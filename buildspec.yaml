@@ -20,5 +20,5 @@ phases:
     commands:
       - make fmt-check
       - make validate
-      - make test
+      - make TEST_ARGS="-timeout 20m" test
 
