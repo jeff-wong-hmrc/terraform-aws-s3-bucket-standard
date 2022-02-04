@@ -13,7 +13,7 @@ provider "aws" {
 
 module "s3_example" {
   source = "../../"
-  #  source      = "hashicorp/hmrc/s3-bucket-standard"
+  #  source      = "hmrc/s3-bucket-standard/aws"
   bucket_name = "${var.test_name}-bucket"
 
   data_expiry   = "1-day"

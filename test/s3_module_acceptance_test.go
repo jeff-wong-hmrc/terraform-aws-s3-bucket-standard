@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"github.com/gruntwork-io/terratest/modules/shell"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 	"github.com/hmrc/terraform-aws-s3-bucket-standard/test/randomreader"
 	"log"
@@ -346,20 +345,12 @@ func copyTerraformAndReturnOptions(t *testing.T, pathFromRootToSource string, ad
 	for k, v := range additionalVars {
 		vars[k] = v
 	}
-	return CopyTerraformAndReturnOptions(t, pathFromRootToSource, "hashicorp/hmrc/s3-bucket-standard", vars)
+	return CopyTerraformAndReturnOptions(t, pathFromRootToSource, vars)
 }
 
-func CopyTerraformAndReturnOptions(t *testing.T, pathFromRootToSource string, publicModuleSrc string, vars map[string]interface{}) *terraform.Options {
+func CopyTerraformAndReturnOptions(t *testing.T, pathFromRootToSource string, vars map[string]interface{}) *terraform.Options {
 	tempTestFolder := test_structure.CopyTerraformFolderToTemp(t, "..", pathFromRootToSource)
 	log.Print(tempTestFolder)
-
-	publicToLocalModuleExp := `/^module \.*/,/^\}\s*$/ s#\(source\s*=\s*\)"` + publicModuleSrc + `"#\1"../../"#`
-	useLocalModule := shell.Command{
-		Command:    "sed",
-		Args:       []string{"-i", "-e", publicToLocalModuleExp, "main.tf"},
-		WorkingDir: tempTestFolder,
-	}
-	shell.RunCommand(t, useLocalModule)
 
 	return terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: tempTestFolder,

@@ -1,8 +1,8 @@
 # S3 bucket standard module
 
-This module creates an AWS S3 bucket, KMS key and associated resources while enforcing the PlatSec S3 bucket policy.
-It uses the [core bucket module](https://github.com/hmrc/terraform-aws-s3-bucket-core) which documents the parts of the
-policy that it enforces.
+This module creates an AWS S3 bucket, KMS key and associated resources while enforcing the MDTP PlatSec S3 bucket
+policy. It uses the [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest) which
+documents the parts of the policy that it enforces.
 
 This module accepts IAM roles and configures access in the bucket and KMS key resource policies to `Allow` access as
 well as `Deny` everyone else. When using this module no additional S3 or KMS permissions are required for access to the
@@ -55,22 +55,23 @@ The security readonly role is not created/managed by this module.
 
 ## Policy enforcement
 
-#### Platform Security meta-data access
+### Platform Security meta-data access
 
 **AWS role RoleSecurityReadOnly has meta-data access to all S3 buckets.** This is for auditing and alerting purposes
 
-#### Logging
+### Logging
 
-Enforced in [core bucket module](https://github.com/hmrc/terraform-aws-s3-bucket-core)
+Enforced in [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest)
 
-#### Bucket policy
+### Bucket policy
 
 **At all times PlatSec must have access to all AWS S3 metadata (not the data).** See Platform Security meta-data access
 above.
 
 **Secure transport is required.**
 
-**Public access is blocked.** Enforced in [core bucket module](https://github.com/hmrc/terraform-aws-s3-bucket-core)
+**Public access is blocked.**
+Enforced in [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest)
 
 Additional network level restriction to a fixed known range of IPs or VPCs and locking down access to a set of known IAM
 roles **should** be implemented. This module supports limiting access to specific IP addresses or VPCs.  
@@ -78,16 +79,16 @@ Buckets containing PII **must** implement IP or VPC restrictions.
 **admin_roles and metadata_read_roles are excluded from the IP/VPC restrictions - DO NOT GIVE THESE ROLES READ OR WRITE
 ACCESS TO DATA** 
 
-#### Tagging, Versioning, Life cycle policies, Encryption at rest, Access control list (ACL)
+### Tagging, Versioning, Life cycle policies, Encryption at rest, Access control list (ACL)
 
-See [core bucket module](https://github.com/hmrc/terraform-aws-s3-bucket-core)
+See [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest)
 
 ## Additional behaviours
 
-#### Ensure the bucket KMS key is used to encrypt objects
+### Ensure the bucket KMS key is used to encrypt objects
 
 This module ensures that the only encryption key that can be use is the KMS key created by the
-[core bucket module](https://github.com/hmrc/terraform-aws-s3-bucket-core).  
+[core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest).  
 To ensure continued access to data, when putting an object either of the following is required
 1. do not specify either `x-amz-server-side-encryption` or `x-amz-server-side-encryption-aws-kms-key-id` so that the 
 bucket server_side_encryption_configuration takes effect

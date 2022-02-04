@@ -1,6 +1,6 @@
-resource "aws_s3_bucket_policy" "bucket_policy" {
+resource "aws_s3_bucket_policy" "bucket" {
   bucket     = module.bucket.id
-  policy     = data.aws_iam_policy_document.bucket_policy_document.json
+  policy     = data.aws_iam_policy_document.bucket.json
   depends_on = [module.bucket]
 }
 
@@ -11,7 +11,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
    NOTE: Any actions added for bucket or object should be also added to the relevant DenyUnknown
    statements.
 */
-data "aws_iam_policy_document" "bucket_policy_document" {
+data "aws_iam_policy_document" "bucket" {
 
   statement {
     sid    = "DenyListBucketContents"

@@ -13,7 +13,7 @@ provider "aws" {
 
 module "s3_example" {
   source = "../../"
-  #  source      = "hashicorp/hmrc/s3-bucket-standard"
+  #  source      = "hmrc/s3-bucket-standard/aws"
   bucket_name = "${var.test_name}-bucket"
   read_roles  = [aws_iam_role.read.arn, data.aws_iam_session_context.current.issuer_arn]
   write_roles = [aws_iam_role.write.arn, data.aws_iam_session_context.current.issuer_arn]

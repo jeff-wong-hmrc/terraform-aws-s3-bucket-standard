@@ -17,7 +17,7 @@ locals {
 
 module "s3_example" {
   source = "../../"
-  #  source      = "hashicorp/hmrc/s3-bucket-standard"
+  #  source      = "hmrc/s3-bucket-standard/aws"
   bucket_name = "${var.test_name}-bucket"
 
   read_roles  = [local.provisioner_role]
