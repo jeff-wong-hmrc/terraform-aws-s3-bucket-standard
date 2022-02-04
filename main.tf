@@ -23,13 +23,14 @@ locals {
 }
 
 module "bucket" {
-  source             = "git::https://github.com/hmrc/terraform-aws-s3-bucket-core.git//?ref=0.1.3" # TODO use hashicorp
+  source             = "hmrc/s3-bucket-core/aws"
+  version            = "~> 0.1.4"
   bucket_name        = var.bucket_name
   versioning_enabled = var.versioning_enabled
   data_expiry        = var.data_expiry
   data_sensitivity   = var.data_sensitivity
   force_destroy      = var.force_destroy
-  kms_key_policy     = data.aws_iam_policy_document.kms_policy.json
+  kms_key_policy     = data.aws_iam_policy_document.kms.json
   log_bucket_id      = var.log_bucket_id
   tags               = var.tags
 }
