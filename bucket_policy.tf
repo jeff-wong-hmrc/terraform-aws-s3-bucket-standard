@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "bucket" {
     condition {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
-      values   = distinct(concat(local.readers, local.writers, local.describers))
+      values   = sort(distinct(concat(local.readers, local.writers, local.describers)))
     }
     condition {
       test     = "StringNotEquals"
@@ -371,7 +371,7 @@ data "aws_iam_policy_document" "bucket" {
       condition {
         test     = "StringNotLike"
         variable = "aws:PrincipalArn"
-        values   = distinct(concat(local.admins, local.describers))
+        values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
         test     = "StringNotEquals"
@@ -406,7 +406,7 @@ data "aws_iam_policy_document" "bucket" {
       condition {
         test     = "StringNotLike"
         variable = "aws:PrincipalArn"
-        values   = distinct(concat(local.admins, local.describers))
+        values   = sort(distinct(concat(local.admins, local.describers)))
       }
       condition {
         test     = "StringNotEquals"
