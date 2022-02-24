@@ -23,9 +23,10 @@ module "s3_example" {
   read_roles  = [local.provisioner_role]
   write_roles = [local.provisioner_role]
 
-  data_expiry   = "1-day"
-  force_destroy = true
-  log_bucket_id = aws_s3_bucket.access_logs.id
+  data_expiry       = "1-day"
+  data_sensitivity  = "low"
+  force_destroy     = true
+  log_bucket_id     = aws_s3_bucket.access_logs.id
 }
 
 resource "aws_kms_key" "additional_key" {

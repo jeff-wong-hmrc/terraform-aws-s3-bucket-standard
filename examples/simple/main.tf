@@ -20,10 +20,11 @@ module "s3_example" {
   list_roles  = [aws_iam_role.list.arn, data.aws_iam_session_context.current.issuer_arn]
   admin_roles = [aws_iam_role.admin.arn, data.aws_iam_session_context.current.issuer_arn]
 
-  data_expiry   = "90-days"
-  force_destroy = true
-  tags          = var.tags
-  log_bucket_id = aws_s3_bucket.access_logs.id
+  data_expiry       = "90-days"
+  data_sensitivity  = "low"
+  force_destroy     = true
+  tags              = var.tags
+  log_bucket_id     = aws_s3_bucket.access_logs.id
 }
 
 data "aws_caller_identity" "current" {}
