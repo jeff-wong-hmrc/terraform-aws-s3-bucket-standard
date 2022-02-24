@@ -16,9 +16,10 @@ module "s3_example" {
   #  source      = "hmrc/s3-bucket-standard/aws"
   bucket_name = "${var.test_name}-bucket"
 
-  data_expiry   = "1-day"
-  force_destroy = true
-  log_bucket_id = aws_s3_bucket.access_logs.id
+  data_expiry       = "1-day"
+  data_sensitivity  = "low"
+  force_destroy     = true
+  log_bucket_id     = aws_s3_bucket.access_logs.id
 }
 
 data "aws_caller_identity" "current" {}
