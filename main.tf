@@ -11,13 +11,14 @@ terraform {
 
 locals {
   security_audit_role      = "arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityReadOnly"
+  security_scanner_role      = "arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityScanner"
   current_provisioner_role = data.aws_iam_session_context.current.issuer_arn
 
   readers = var.read_roles
   writers = var.write_roles
 
   admins     = sort(distinct(concat(var.admin_roles, [local.current_provisioner_role])))
-  describers = sort(distinct(concat(local.admins, [local.security_audit_role], var.metadata_read_roles)))
+  describers = sort(distinct(concat(local.admins, [local.security_audit_role, local.security_scanner_role], var.metadata_read_roles)))
   listers    = sort(distinct(concat(local.admins, var.list_roles)))
   all_roles  = sort(distinct(concat(local.admins, local.describers, var.read_roles, var.write_roles, var.list_roles)))
 }
