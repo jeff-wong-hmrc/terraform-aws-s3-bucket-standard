@@ -11,7 +11,7 @@ terraform {
 
 locals {
   security_audit_role      = "arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityReadOnly"
-  security_scanner_role      = "arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityScanner"
+  security_scanner_role    = "arn:aws:iam::${data.aws_caller_identity.current.id}:role/RoleSecurityScanner"
   current_provisioner_role = data.aws_iam_session_context.current.issuer_arn
 
   readers = var.read_roles
