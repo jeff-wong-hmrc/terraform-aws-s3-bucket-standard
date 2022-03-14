@@ -91,7 +91,6 @@ data "aws_iam_policy_document" "kms" {
     }
 
     actions = [
-      "kms:GetKeyPolicy",
       "kms:GetParametersForImport",
       "kms:GetPublicKey",
     ]
@@ -116,7 +115,8 @@ data "aws_iam_policy_document" "kms" {
 
     actions = [
       "kms:Describe*",
-      "kms:GetKeyRotationStatus"
+      "kms:GetKeyPolicy",
+      "kms:GetKeyRotationStatus",
     ]
 
     resources = ["*"]
