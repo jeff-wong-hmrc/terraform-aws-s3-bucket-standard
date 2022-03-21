@@ -60,7 +60,6 @@ data "aws_iam_policy_document" "kms" {
     actions = [
       "kms:Create*",
       "kms:Enable*",
-      "kms:List*",
       "kms:Put*",
       "kms:Update*",
       "kms:Revoke*",
@@ -117,6 +116,7 @@ data "aws_iam_policy_document" "kms" {
       "kms:Describe*",
       "kms:GetKeyPolicy",
       "kms:GetKeyRotationStatus",
+      "kms:List*",
     ]
 
     resources = ["*"]
