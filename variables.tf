@@ -93,3 +93,9 @@ variable "required_tags_with_restricted_values" {
   description = "A map of required tags and their values"
   default     = {}
 }
+
+variable "transition_to_glacier_days" {
+  description = "The number of days after object creation when the object will transition to Glacier storage; if 0, Glacier transition is disabled"
+  type        = number
+  default     = 0
+}
