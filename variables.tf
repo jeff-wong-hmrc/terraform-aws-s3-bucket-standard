@@ -93,3 +93,21 @@ variable "required_tags_with_restricted_values" {
   description = "A map of required tags and their values"
   default     = {}
 }
+
+variable "read_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for reading files"
+  default     = []
+}
+
+variable "list_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for listing file names"
+  default     = []
+}
+
+variable "metadata_read_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow to access metadata to enable bucket audit"
+  default     = []
+}

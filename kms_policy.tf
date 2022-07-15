@@ -22,6 +22,12 @@ data "aws_iam_policy_document" "kms" {
       // writers need to be able to decrypt as part of a MultiPartUpload
       values = distinct(concat(local.readers, local.writers))
     }
+
+    condition {
+      test     = "StringNotLike"
+      variable = "aws:Service"
+      values   = local.read_services
+    }
   }
 
   statement {

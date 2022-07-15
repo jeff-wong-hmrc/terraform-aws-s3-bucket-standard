@@ -16,6 +16,12 @@ locals {
   readers = var.read_roles
   writers = var.write_roles
 
+  default_services       = ["access-analyzer.amazonaws.com"]
+  read_services          = sort(distinct(concat(local.default_services, var.read_services)))
+  list_services          = sort(distinct(concat(local.default_services, var.list_services)))
+  metadata_read_services = sort(distinct(concat(local.default_services, var.metadata_read_services)))
+
+
   admins     = sort(distinct(concat(var.admin_roles, [local.current_provisioner_role])))
   describers = sort(distinct(concat(local.admins, [local.security_audit_role], var.metadata_read_roles)))
   listers    = sort(distinct(concat(local.admins, var.list_roles)))
