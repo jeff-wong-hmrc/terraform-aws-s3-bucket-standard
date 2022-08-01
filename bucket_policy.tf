@@ -103,6 +103,11 @@ data "aws_iam_policy_document" "bucket" {
       variable = "aws:PrincipalArn"
       values   = local.writers
     }
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:Service"
+      values   = local.write_services
+    }
   }
 
   statement {
