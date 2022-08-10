@@ -65,6 +65,10 @@ A list of AWS Service Principles to allow actions for listing file names.
 
 A list of AWS Service Principles to allow to access metadata to enable bucket audit.
 
+### write_services
+
+A list of AWS Service Principles to allow actions for writing files.
+
 ## Policy enforcement
 
 ### Platform Security meta-data access
