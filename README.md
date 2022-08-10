@@ -53,6 +53,18 @@ S3 bucket policy.
 metadata_read_roles.**  
 The security readonly role is not created/managed by this module.
 
+### read_services
+
+A list of AWS Service Principles to allow actions for reading files.
+
+### list_services
+
+A list of AWS Service Principles to allow actions for listing file names.
+
+### metadata_read_services
+
+A list of AWS Service Principles to allow to access metadata to enable bucket audit.
+
 ## Policy enforcement
 
 ### Platform Security meta-data access
