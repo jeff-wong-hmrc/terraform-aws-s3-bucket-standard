@@ -99,3 +99,27 @@ variable "transition_to_glacier_days" {
   type        = number
   default     = 0
 }
+
+variable "read_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for reading files"
+  default     = []
+}
+
+variable "list_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for listing file names"
+  default     = []
+}
+
+variable "metadata_read_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow to access metadata to enable bucket audit"
+  default     = []
+}
+
+variable "write_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for writing files"
+  default     = []
+}

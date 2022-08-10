@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "bucket" {
     condition {
       test     = "StringNotEquals"
       variable = "aws:Service"
-      values   = ["access-analyzer.amazonaws.com"]
+      values   = local.list_services
     }
   }
 
@@ -58,7 +58,7 @@ data "aws_iam_policy_document" "bucket" {
     condition {
       test     = "StringNotEquals"
       variable = "aws:Service"
-      values   = ["access-analyzer.amazonaws.com"]
+      values   = local.default_services
     }
   }
 
@@ -77,6 +77,11 @@ data "aws_iam_policy_document" "bucket" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.readers
+    }
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:Service"
+      values   = local.read_services
     }
   }
 
@@ -97,6 +102,11 @@ data "aws_iam_policy_document" "bucket" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.writers
+    }
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:Service"
+      values   = local.write_services
     }
   }
 
@@ -121,7 +131,7 @@ data "aws_iam_policy_document" "bucket" {
     condition {
       test     = "StringNotEquals"
       variable = "aws:Service"
-      values   = ["access-analyzer.amazonaws.com"]
+      values   = local.metadata_read_services
     }
   }
 
@@ -376,7 +386,7 @@ data "aws_iam_policy_document" "bucket" {
       condition {
         test     = "StringNotEquals"
         variable = "aws:Service"
-        values   = ["access-analyzer.amazonaws.com"]
+        values   = local.default_services
       }
     }
   }
@@ -411,7 +421,7 @@ data "aws_iam_policy_document" "bucket" {
       condition {
         test     = "StringNotEquals"
         variable = "aws:Service"
-        values   = ["access-analyzer.amazonaws.com"]
+        values   = local.default_services
       }
     }
   }
