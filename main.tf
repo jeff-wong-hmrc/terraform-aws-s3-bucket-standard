@@ -20,6 +20,7 @@ locals {
   read_services          = sort(distinct(concat(local.default_services, var.read_services)))
   list_services          = sort(distinct(concat(local.default_services, var.list_services)))
   metadata_read_services = sort(distinct(concat(local.default_services, var.metadata_read_services)))
+  write_services         = var.write_services
 
 
   admins     = sort(distinct(concat(var.admin_roles, [local.current_provisioner_role])))

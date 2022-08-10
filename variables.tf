@@ -111,3 +111,9 @@ variable "metadata_read_services" {
   description = "A list of AWS Service Principles to allow to access metadata to enable bucket audit"
   default     = []
 }
+
+variable "write_services" {
+  type        = list(string)
+  description = "A list of AWS Service Principles to allow actions for writing files"
+  default     = []
+}

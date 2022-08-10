@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "kms" {
     condition {
       test     = "StringNotLike"
       variable = "aws:Service"
-      values   = local.read_services
+      values   = distinct(concat(local.read_services, local.write_services))
     }
   }
 
@@ -51,6 +51,11 @@ data "aws_iam_policy_document" "kms" {
       test     = "StringNotLike"
       variable = "aws:PrincipalArn"
       values   = local.writers
+    }
+    condition {
+      test     = "StringNotLike"
+      variable = "aws:Service"
+      values   = local.write_services
     }
   }
 
