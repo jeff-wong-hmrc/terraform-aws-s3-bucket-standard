@@ -30,16 +30,17 @@ locals {
 }
 
 module "bucket" {
-  source             = "hmrc/s3-bucket-core/aws"
-  version            = "~> 1.0.0"
-  bucket_name        = var.bucket_name
-  versioning_enabled = var.versioning_enabled
-  data_expiry        = var.data_expiry
-  data_sensitivity   = var.data_sensitivity
-  force_destroy      = var.force_destroy
-  kms_key_policy     = data.aws_iam_policy_document.kms.json
-  log_bucket_id      = var.log_bucket_id
-  tags               = var.tags
+  source                     = "hmrc/s3-bucket-core/aws"
+  version                    = "~> 1.1.0"
+  bucket_name                = var.bucket_name
+  versioning_enabled         = var.versioning_enabled
+  data_expiry                = var.data_expiry
+  data_sensitivity           = var.data_sensitivity
+  force_destroy              = var.force_destroy
+  kms_key_policy             = data.aws_iam_policy_document.kms.json
+  log_bucket_id              = var.log_bucket_id
+  tags                       = var.tags
+  transition_to_glacier_days = var.transition_to_glacier_days
 }
 
 data "aws_caller_identity" "current" {}

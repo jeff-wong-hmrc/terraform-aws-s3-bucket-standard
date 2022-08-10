@@ -95,7 +95,7 @@ Buckets containing PII **must** implement IP or VPC restrictions.
 **admin_roles and metadata_read_roles are excluded from the IP/VPC restrictions - DO NOT GIVE THESE ROLES READ OR WRITE
 ACCESS TO DATA** 
 
-### Tagging, Versioning, Life cycle policies, Encryption at rest, Access control list (ACL)
+### Tagging, Versioning, Lifecycle policies, Encryption at rest, Access control list (ACL)
 
 See [core bucket module](https://registry.terraform.io/modules/hmrc/s3-bucket-core/aws/latest)
 
