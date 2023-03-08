@@ -14,11 +14,11 @@ provider "aws" {
 module "s3_example" {
   source = "../../"
   #  source      = "hmrc/s3-bucket-standard/aws"
-  bucket_name = "${var.test_name}-bucket"
-  read_roles  = [aws_iam_role.read.arn, data.aws_iam_session_context.current.issuer_arn]
-  write_roles = [aws_iam_role.write.arn, data.aws_iam_session_context.current.issuer_arn]
-  list_roles  = [aws_iam_role.list.arn, data.aws_iam_session_context.current.issuer_arn]
-  admin_roles = [aws_iam_role.admin.arn, data.aws_iam_session_context.current.issuer_arn]
+  bucket_name         = "${var.test_name}-bucket"
+  read_roles          = [aws_iam_role.read.arn, data.aws_iam_session_context.current.issuer_arn]
+  write_roles         = [aws_iam_role.write.arn, data.aws_iam_session_context.current.issuer_arn]
+  list_roles          = [aws_iam_role.list.arn, data.aws_iam_session_context.current.issuer_arn]
+  admin_roles         = [aws_iam_role.admin.arn, data.aws_iam_session_context.current.issuer_arn]
   metadata_read_roles = [aws_iam_role.metadata.arn]
 
   data_expiry      = "90-days"
