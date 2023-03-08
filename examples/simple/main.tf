@@ -19,6 +19,7 @@ module "s3_example" {
   write_roles = [aws_iam_role.write.arn, data.aws_iam_session_context.current.issuer_arn]
   list_roles  = [aws_iam_role.list.arn, data.aws_iam_session_context.current.issuer_arn]
   admin_roles = [aws_iam_role.admin.arn, data.aws_iam_session_context.current.issuer_arn]
+  metadata_read_roles = [aws_iam_role.metadata.arn]
 
   data_expiry      = "90-days"
   data_sensitivity = "low"
@@ -62,5 +63,10 @@ resource "aws_iam_role" "list" {
 
 resource "aws_iam_role" "admin" {
   name               = "${var.test_name}-admin-role"
+  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+}
+
+resource "aws_iam_role" "metadata" {
+  name               = "${var.test_name}-metadata-role"
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
 }

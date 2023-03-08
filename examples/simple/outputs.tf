@@ -17,3 +17,6 @@ output "list_role_arn" {
 output "admin_role_arn" {
   value = aws_iam_role.admin.arn
 }
+output "metadata_role_arn" {
+  value = aws_iam_role.metadata.arn
+}

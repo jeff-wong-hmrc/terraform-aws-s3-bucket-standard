@@ -39,19 +39,24 @@ __The `admin_roles` are typically your Terraform/Administrator/Jenkins roles__
 The administrator roles do not have access to read or write/delete by default **but they can list all objects**.  
 They exist to perform any configuration on the bucket/KMS or policies.
 
-If you use more than one role to run terraform ensure they are all present in the admin_roles variable.
+Roles that terraform apply will be run from will need to be included here. For plan only roles see metadata_read_roles
 
 The current role that is used when applying this module will be added to the list of admins if it is not already
 present.
 
 ### metadata_read_roles
 
-The role or roles that can read bucket and KMS key metadata.  
-These roles exist so that the bucket and associated resources can be audited to ensure that they comply with the PlatSec
+The role or roles that can read bucket config and KMS key metadata.
+If you have a role that needs to be able to plan terraform but not apply (such as for a PR builder)
+you should add that role to this list 
+
+
+This role also exists so that the bucket and associated resources can be audited to ensure that they comply with the PlatSec
 S3 bucket policy.  
 **The role `role/RoleSecurityReadOnly` in the AWS account of the bucket is automatically added to the
 metadata_read_roles.**  
 The security readonly role is not created/managed by this module.
+
 
 ### read_services
 
