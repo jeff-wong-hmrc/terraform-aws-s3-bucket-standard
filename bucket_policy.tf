@@ -118,9 +118,14 @@ data "aws_iam_policy_document" "bucket" {
       identifiers = ["*"]
     }
     actions = [
+      "s3:GetAccelerateConfiguration",
+      "s3:GetAnalyticsConfiguration",
       "s3:GetBucket*",
-      "s3:GetLifecycleConfiguration",
       "s3:GetEncryptionConfiguration",
+      "s3:GetInventoryConfiguration",
+      "s3:GetLifecycleConfiguration",
+      "s3:GetMetricsConfiguration",
+      "s3:GetReplicationConfiguration",
     ]
     resources = [module.bucket.arn]
     condition {
@@ -144,11 +149,6 @@ data "aws_iam_policy_document" "bucket" {
     }
     actions = [
       "s3:DeleteBucket*",
-      "s3:GetAccelerateConfiguration",
-      "s3:GetAnalyticsConfiguration",
-      "s3:GetInventoryConfiguration",
-      "s3:GetMetricsConfiguration",
-      "s3:GetReplicationConfiguration",
       "s3:PutAccelerateConfiguration",
       "s3:PutAnalyticsConfiguration",
       "s3:PutBucket*",
