@@ -126,7 +126,7 @@ variable "write_services" {
 
 variable "allow_guardduty_metadata_audit" {
   type        = bool
-  description = "Adds the guraduty service linked role to check metadata of the bucket. This allows it to alert on buckets made public"
+  description = "Adds the AWS GuradDuty service linked role to check metadata of the bucket. This allows it to alert on buckets made public"
   default     = true
 }
 
