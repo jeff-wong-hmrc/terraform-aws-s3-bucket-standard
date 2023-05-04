@@ -123,3 +123,15 @@ variable "write_services" {
   description = "A list of AWS Service Principles to allow actions for writing files"
   default     = []
 }
+
+variable "allow_guardduty_metadata_audit" {
+  type        = bool
+  description = "Adds the AWS GuradDuty service linked role to check metadata of the bucket. This allows it to alert on buckets made public"
+  default     = true
+}
+
+variable "allow_security_team_metadata_audit" {
+  type        = bool
+  description = "Adds the role RoleSecurityReadOnly to check metadata of the bucket. This role is used for manual and automated checks"
+  default     = true
+}
