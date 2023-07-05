@@ -306,6 +306,7 @@ func TestCannotUseDifferentKeys(t *testing.T) {
 	_, err := client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("differentKey"),
+		ContentMD5:           aws.String("7gI/CLQS/eiD/TtCrak7Ow=="),
 		Body:                 strings.NewReader("different kms key"),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &additionalKey})
@@ -313,25 +314,29 @@ func TestCannotUseDifferentKeys(t *testing.T) {
 	_, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("serviceKey"),
+		ContentMD5:           aws.String("SdEXo11cIz0KpKpBpNSXnQ=="),
 		Body:                 strings.NewReader("service key"),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms})
 	require.Error(t, err)
 	_, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("aesKey"),
+		ContentMD5:           aws.String("drdZNFfiq1C+/i3NY884jw=="),
 		Body:                 strings.NewReader("AES"),
 		ServerSideEncryption: types.ServerSideEncryptionAes256})
 	require.Error(t, err)
 
 	putOut, err := client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: &bucketName,
-		Key:    aws.String("noEncSpec"),
-		Body:   strings.NewReader("Dont specify any")})
+		Bucket:     &bucketName,
+		Key:        aws.String("noEncSpec"),
+		ContentMD5: aws.String("LW9Jm9TbEdK8rH64SRzqPw=="),
+		Body:       strings.NewReader("Dont specify any")})
 	require.NoError(t, err)
 	assert.Equal(t, bucketKeyArn, *putOut.SSEKMSKeyId)
 	putOut, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("specKeyByArn"),
+		ContentMD5:           aws.String("oii/kbCy88J+p78t9SEMqw=="),
 		Body:                 strings.NewReader("specify alg and bucket key"),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &bucketKeyArn})
@@ -340,6 +345,7 @@ func TestCannotUseDifferentKeys(t *testing.T) {
 	putOut, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("specKeyById"),
+		ContentMD5:           aws.String("oii/kbCy88J+p78t9SEMqw=="),
 		Body:                 strings.NewReader("specify alg and bucket key"),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &bucketKeyId})
@@ -427,3 +433,7 @@ func CopyTerraformAndReturnOptions(t *testing.T, pathFromRootToSource string, va
 		Vars:         vars,
 	})
 }
+
+//func MD5EncodeBody() {
+//
+//}
