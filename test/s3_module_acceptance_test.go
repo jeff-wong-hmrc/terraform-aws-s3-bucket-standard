@@ -50,9 +50,10 @@ func TestReadRole(t *testing.T) {
 	assert.Error(t, err)
 
 	_, err = readS3Client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.Error(t, err)
 
 	_, err = readS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -88,9 +89,10 @@ func TestWriteRole(t *testing.T) {
 	//test write role
 	writeS3Client := S3ClientFromOutputArn(t, ctx, terraformOptions, "write_role_arn")
 	uploadResponse, err := writeS3Client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.NoError(t, err)
 
 	_, err = writeS3Client.GetObject(ctx, &s3.GetObjectInput{
@@ -150,9 +152,10 @@ func TestListRole(t *testing.T) {
 	assert.Error(t, err)
 
 	_, err = listS3Client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.Error(t, err)
 
 	_, err = listS3Client.GetObject(ctx, &s3.GetObjectInput{
@@ -203,9 +206,10 @@ func TestAdminRole(t *testing.T) {
 	assert.Error(t, err)
 
 	_, err = adminS3Client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.Error(t, err)
 
 	_, err = adminS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -247,9 +251,10 @@ func TestMetadataRole(t *testing.T) {
 	assert.Error(t, err)
 
 	_, err = metadataS3Client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.Error(t, err)
 
 	_, err = metadataS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -384,9 +389,10 @@ func CreateConfig(t *testing.T, ctx context.Context) aws.Config {
 func CreateTestObject(t *testing.T, ctx context.Context, bucketName string, testKey string) *string {
 	terraformClient := s3.NewFromConfig(CreateConfig(t, ctx))
 	uploadResponse, Err := terraformClient.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(testKey),
-		Body:   strings.NewReader("banana")})
+		Bucket:     aws.String(bucketName),
+		Key:        aws.String(testKey),
+		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
+		Body:       strings.NewReader("banana")})
 	require.NoError(t, Err)
 	return uploadResponse.VersionId
 }
