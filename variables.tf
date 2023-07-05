@@ -135,3 +135,20 @@ variable "allow_security_team_metadata_audit" {
   description = "Adds the role RoleSecurityReadOnly to check metadata of the bucket. This role is used for manual and automated checks"
   default     = true
 }
+
+variable "object_lock" {
+  description = "Specify whether to lock objects on the bucket to prevent modification"
+  type        = bool
+  default     = false
+}
+
+variable "object_lock_mode" {
+  type        = string
+  description = "COMPLIANCE or GOVERNANCE"
+  default     = "COMPLIANCE"
+
+  validation {
+    condition     = var.object_lock_mode == "COMPLIANCE" || var.object_lock_mode == "GOVERNANCE"
+    error_message = "The object_lock_mode must be \"COMPLIANCE\" or \"GOVERNANCE\"."
+  }
+}

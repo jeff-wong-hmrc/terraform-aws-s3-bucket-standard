@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "3.68.0"
+      version = "5.4.0"
     }
   }
 }
@@ -26,6 +26,8 @@ module "s3_example" {
   force_destroy    = true
   tags             = var.tags
   log_bucket_id    = aws_s3_bucket.access_logs.id
+  object_lock      = true
+  object_lock_mode = "GOVERNANCE"
 }
 
 data "aws_caller_identity" "current" {}
