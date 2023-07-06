@@ -13,3 +13,7 @@ output "bucket_kms_key_id" {
 output "additional_kms_key_arn" {
   value = aws_kms_key.additional_key.arn
 }
+
+output "object_lock" {
+  value = local.object_lock
+}

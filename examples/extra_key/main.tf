@@ -13,6 +13,7 @@ provider "aws" {
 
 locals {
   provisioner_role = data.aws_iam_session_context.current.issuer_arn
+  object_lock = false
 }
 
 module "s3_example" {
@@ -27,7 +28,7 @@ module "s3_example" {
   data_sensitivity = "low"
   force_destroy    = true
   log_bucket_id    = aws_s3_bucket.access_logs.id
-  object_lock      = true
+  object_lock      = local.object_lock
   object_lock_mode = "GOVERNANCE"
 }
 

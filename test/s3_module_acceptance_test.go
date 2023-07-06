@@ -39,6 +39,7 @@ func TestReadRole(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+	objectLock := terraform.Output(t, terraformOptions, "object_lock")
 
 	versionId := CreateTestObject(t, ctx, bucketName, testKey)
 
@@ -60,12 +61,14 @@ func TestReadRole(t *testing.T) {
 	})
 	require.Error(t, err)
 
-	_, err = readS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		VersionId: versionId,
-		Bucket:    aws.String(bucketName),
-		Key:       &testKey,
-	})
-	require.Error(t, err)
+	if objectLock != "true" {
+		_, err = readS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			VersionId: versionId,
+			Bucket:    aws.String(bucketName),
+			Key:       &testKey,
+		})
+		require.Error(t, err)
+	}
 
 	_, err = readS3Client.ListBucketInventoryConfigurations(ctx, &s3.ListBucketInventoryConfigurationsInput{
 		Bucket: aws.String(bucketName),
@@ -90,6 +93,7 @@ func TestWriteRole(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+	objectLock := terraform.Output(t, terraformOptions, "object_lock")
 
 	//test write role
 	writeS3Client := S3ClientFromOutputArn(t, ctx, terraformOptions, "write_role_arn")
@@ -121,13 +125,15 @@ func TestWriteRole(t *testing.T) {
 	assert.Error(t, err)
 
 	//test delete on write role
-	_, err = writeS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		VersionId: uploadResponse.VersionId,
-		Bucket:    aws.String(bucketName),
-		Key:       &testKey,
-	})
-	fmt.Println(err)
-	require.NoError(t, err)
+	if objectLock != "true" {
+		_, err = writeS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			VersionId: uploadResponse.VersionId,
+			Bucket:    aws.String(bucketName),
+			Key:       &testKey,
+		})
+		fmt.Println(err)
+		require.NoError(t, err)
+	}
 }
 
 func TestListRole(t *testing.T) {
@@ -142,9 +148,13 @@ func TestListRole(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+	objectLock := terraform.Output(t, terraformOptions, "object_lock")
 
 	versionId := CreateTestObject(t, ctx, bucketName, testKey)
-	defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
+
+	if objectLock != "true" {
+		defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
+	}
 
 	listS3Client := S3ClientFromOutputArn(t, ctx, terraformOptions, "list_role_arn")
 	ListResponse, err := listS3Client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{Bucket: aws.String(bucketName)})
@@ -190,9 +200,12 @@ func TestAdminRole(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+	objectLock := terraform.Output(t, terraformOptions, "object_lock")
 
 	versionId := CreateTestObject(t, ctx, bucketName, testKey)
-	defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
+	if objectLock != "true" {
+		defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
+	}
 
 	adminS3Client := S3ClientFromOutputArn(t, ctx, terraformOptions, "admin_role_arn")
 	_, err := adminS3Client.ListBucketInventoryConfigurations(ctx, &s3.ListBucketInventoryConfigurationsInput{
@@ -222,12 +235,14 @@ func TestAdminRole(t *testing.T) {
 	})
 	require.Error(t, err)
 
-	_, err = adminS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		VersionId: versionId,
-		Bucket:    aws.String(bucketName),
-		Key:       &testKey,
-	})
-	require.Error(t, err)
+	if objectLock != "true" {
+		_, err = adminS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			VersionId: versionId,
+			Bucket:    aws.String(bucketName),
+			Key:       &testKey,
+		})
+		require.Error(t, err)
+	}
 }
 
 func TestMetadataRole(t *testing.T) {
@@ -242,10 +257,12 @@ func TestMetadataRole(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+	objectLock := terraform.Output(t, terraformOptions, "object_lock")
 
 	versionId := CreateTestObject(t, ctx, bucketName, testKey)
-	defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
-
+	if objectLock != "true" {
+		defer DeleteTestObject(t, ctx, bucketName, testKey, versionId)
+	}
 	metadataS3Client := S3ClientFromOutputArn(t, ctx, terraformOptions, "metadata_role_arn")
 	_, err := metadataS3Client.GetBucketAccelerateConfiguration(ctx, &s3.GetBucketAccelerateConfigurationInput{
 		Bucket: aws.String(bucketName),
@@ -269,12 +286,14 @@ func TestMetadataRole(t *testing.T) {
 	})
 	require.Error(t, err)
 
-	_, err = metadataS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		VersionId: versionId,
-		Bucket:    aws.String(bucketName),
-		Key:       &testKey,
-	})
-	require.Error(t, err)
+	if objectLock != "true" {
+		_, err = metadataS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			VersionId: versionId,
+			Bucket:    aws.String(bucketName),
+			Key:       &testKey,
+		})
+		require.Error(t, err)
+	}
 }
 
 func TestUploadMultiPart(t *testing.T) {
