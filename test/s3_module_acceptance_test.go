@@ -1,12 +1,14 @@
 package test
 
 import (
+	"bytes"
 	"context"
+	"crypto/md5"
+	"encoding/base64"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
-	"github.com/hmrc/terraform-aws-s3-bucket-standard/test/randomreader"
 	"log"
 	"strings"
 	"testing"
@@ -30,6 +32,7 @@ func TestReadRole(t *testing.T) {
 	ctx := context.Background()
 
 	testKey := "testS3KeyName"
+	body := "banana"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
 
@@ -52,8 +55,9 @@ func TestReadRole(t *testing.T) {
 	_, err = readS3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body)),
+	})
 	require.Error(t, err)
 
 	_, err = readS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -79,6 +83,7 @@ func TestWriteRole(t *testing.T) {
 	ctx := context.Background()
 
 	testKey := "testS3KeyName"
+	body := "banana"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
 
@@ -91,8 +96,9 @@ func TestWriteRole(t *testing.T) {
 	uploadResponse, err := writeS3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body)),
+	})
 	require.NoError(t, err)
 
 	_, err = writeS3Client.GetObject(ctx, &s3.GetObjectInput{
@@ -129,6 +135,7 @@ func TestListRole(t *testing.T) {
 	ctx := context.Background()
 
 	testKey := "testS3KeyName"
+	body := "banana"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
 
@@ -154,8 +161,9 @@ func TestListRole(t *testing.T) {
 	_, err = listS3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body)),
+	})
 	require.Error(t, err)
 
 	_, err = listS3Client.GetObject(ctx, &s3.GetObjectInput{
@@ -175,6 +183,7 @@ func TestAdminRole(t *testing.T) {
 	ctx := context.Background()
 
 	testKey := "testS3KeyName"
+	body := "banana"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
 
@@ -208,8 +217,9 @@ func TestAdminRole(t *testing.T) {
 	_, err = adminS3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body)),
+	})
 	require.Error(t, err)
 
 	_, err = adminS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -225,6 +235,7 @@ func TestMetadataRole(t *testing.T) {
 	ctx := context.Background()
 
 	testKey := "testS3KeyName"
+	body := "banana"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
 
@@ -253,8 +264,9 @@ func TestMetadataRole(t *testing.T) {
 	_, err = metadataS3Client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body)),
+	})
 	require.Error(t, err)
 
 	_, err = metadataS3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
@@ -269,6 +281,7 @@ func TestUploadMultiPart(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
 
+	body := "large_multi_part_upload"
 	testKey := "testS3KeyName"
 	terraformOptions := copyTerraformAndReturnOptions(t, "examples/simple", map[string]interface{}{})
 	defer terraform.Destroy(t, terraformOptions)
@@ -282,9 +295,10 @@ func TestUploadMultiPart(t *testing.T) {
 		u.PartSize = manager.MinUploadPartSize
 	})
 	_, err := uploader.Upload(ctx, &s3.PutObjectInput{
-		Bucket: &bucketName,
-		Key:    &testKey,
-		Body:   randomreader.New(manager.MinUploadPartSize + 100),
+		Bucket:     &bucketName,
+		Key:        &testKey,
+		Body:       bytes.NewReader([]byte(body)),
+		ContentMD5: aws.String(md5EncodeBody(body)),
 	})
 	require.NoError(t, err)
 }
@@ -301,52 +315,58 @@ func TestCannotUseDifferentKeys(t *testing.T) {
 	bucketKeyId := terraform.Output(t, terraformOptions, "bucket_kms_key_id")
 	additionalKey := terraform.Output(t, terraformOptions, "additional_kms_key_arn")
 
+	var body string
 	cfg := CreateConfig(t, ctx)
 	client := s3.NewFromConfig(cfg)
+	body = "different kms key"
 	_, err := client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("differentKey"),
-		ContentMD5:           aws.String("7gI/CLQS/eiD/TtCrak7Ow=="),
-		Body:                 strings.NewReader("different kms key"),
+		Body:                 strings.NewReader(body),
+		ContentMD5:           aws.String(md5EncodeBody(body)),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &additionalKey})
 	require.Error(t, err)
+	body = "service key"
 	_, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("serviceKey"),
-		ContentMD5:           aws.String("SdEXo11cIz0KpKpBpNSXnQ=="),
-		Body:                 strings.NewReader("service key"),
+		Body:                 strings.NewReader(body),
+		ContentMD5:           aws.String(md5EncodeBody(body)),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms})
 	require.Error(t, err)
+	body = "AES"
 	_, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("aesKey"),
-		ContentMD5:           aws.String("drdZNFfiq1C+/i3NY884jw=="),
-		Body:                 strings.NewReader("AES"),
+		Body:                 strings.NewReader(body),
+		ContentMD5:           aws.String(md5EncodeBody(body)),
 		ServerSideEncryption: types.ServerSideEncryptionAes256})
 	require.Error(t, err)
-
+	body = "Dont specify any"
 	putOut, err := client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     &bucketName,
 		Key:        aws.String("noEncSpec"),
-		ContentMD5: aws.String("LW9Jm9TbEdK8rH64SRzqPw=="),
-		Body:       strings.NewReader("Dont specify any")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body))})
 	require.NoError(t, err)
 	assert.Equal(t, bucketKeyArn, *putOut.SSEKMSKeyId)
+	body = "specify alg and bucket key"
 	putOut, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("specKeyByArn"),
-		ContentMD5:           aws.String("oii/kbCy88J+p78t9SEMqw=="),
-		Body:                 strings.NewReader("specify alg and bucket key"),
+		Body:                 strings.NewReader(body),
+		ContentMD5:           aws.String(md5EncodeBody(body)),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &bucketKeyArn})
 	require.NoError(t, err)
 	assert.Equal(t, bucketKeyArn, *putOut.SSEKMSKeyId)
+	body = "specify alg and bucket key"
 	putOut, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:               &bucketName,
 		Key:                  aws.String("specKeyById"),
-		ContentMD5:           aws.String("oii/kbCy88J+p78t9SEMqw=="),
-		Body:                 strings.NewReader("specify alg and bucket key"),
+		Body:                 strings.NewReader(body),
+		ContentMD5:           aws.String(md5EncodeBody(body)),
 		ServerSideEncryption: types.ServerSideEncryptionAwsKms,
 		SSEKMSKeyId:          &bucketKeyId})
 	require.NoError(t, err)
@@ -394,11 +414,12 @@ func CreateConfig(t *testing.T, ctx context.Context) aws.Config {
 
 func CreateTestObject(t *testing.T, ctx context.Context, bucketName string, testKey string) *string {
 	terraformClient := s3.NewFromConfig(CreateConfig(t, ctx))
+	body := "banana"
 	uploadResponse, Err := terraformClient.PutObject(ctx, &s3.PutObjectInput{
 		Bucket:     aws.String(bucketName),
 		Key:        aws.String(testKey),
-		ContentMD5: aws.String("crMCvyl6Iop1cwEj7+98QQ=="),
-		Body:       strings.NewReader("banana")})
+		Body:       strings.NewReader(body),
+		ContentMD5: aws.String(md5EncodeBody(body))})
 	require.NoError(t, Err)
 	return uploadResponse.VersionId
 }
@@ -434,6 +455,9 @@ func CopyTerraformAndReturnOptions(t *testing.T, pathFromRootToSource string, va
 	})
 }
 
-//func MD5EncodeBody() {
-//
-//}
+func md5EncodeBody(s string) string {
+	hash := md5.Sum([]byte(s))
+	var data []byte
+	data = hash[:]
+	return base64.StdEncoding.EncodeToString(data)
+}
