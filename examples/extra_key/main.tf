@@ -13,7 +13,7 @@ provider "aws" {
 
 locals {
   provisioner_role = data.aws_iam_session_context.current.issuer_arn
-  object_lock = false
+  object_lock      = false
 }
 
 module "s3_example" {

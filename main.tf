@@ -45,7 +45,6 @@ module "bucket" {
   transition_to_glacier_days = var.transition_to_glacier_days
   object_lock                = var.object_lock
   object_lock_mode           = var.object_lock_mode
-
 }
 
 data "aws_caller_identity" "current" {}
