@@ -20,3 +20,7 @@ output "admin_role_arn" {
 output "metadata_role_arn" {
   value = aws_iam_role.metadata.arn
 }
+
+output "object_lock" {
+  value = local.object_lock
+}

@@ -2,13 +2,17 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "3.68.0"
+      version = "5.4.0"
     }
   }
 }
 
 provider "aws" {
   region = "eu-west-2"
+}
+
+locals {
+  object_lock = true
 }
 
 module "s3_example" {
@@ -20,6 +24,8 @@ module "s3_example" {
   data_sensitivity = "low"
   force_destroy    = true
   log_bucket_id    = aws_s3_bucket.access_logs.id
+  object_lock      = local.object_lock
+  object_lock_mode = "GOVERNANCE"
 }
 
 data "aws_caller_identity" "current" {}

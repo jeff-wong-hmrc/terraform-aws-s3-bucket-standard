@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.68"
+      version = ">= 5.4"
     }
   }
 }
@@ -33,7 +33,7 @@ locals {
 
 module "bucket" {
   source                     = "hmrc/s3-bucket-core/aws"
-  version                    = "~> 1.1.0"
+  version                    = "~> 2.0.1"
   bucket_name                = var.bucket_name
   versioning_enabled         = var.versioning_enabled
   data_expiry                = var.data_expiry
@@ -43,6 +43,9 @@ module "bucket" {
   log_bucket_id              = var.log_bucket_id
   tags                       = var.tags
   transition_to_glacier_days = var.transition_to_glacier_days
+  object_lock                = var.object_lock
+  object_lock_mode           = var.object_lock_mode
+
 }
 
 data "aws_caller_identity" "current" {}
