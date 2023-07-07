@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.4"
+      version = ">= 4.9"
     }
   }
 }
@@ -33,7 +33,7 @@ locals {
 
 module "bucket" {
   source                     = "hmrc/s3-bucket-core/aws"
-  version                    = "~> 2.0.1"
+  version                    = "~> 2.0.2"
   bucket_name                = var.bucket_name
   versioning_enabled         = var.versioning_enabled
   data_expiry                = var.data_expiry
