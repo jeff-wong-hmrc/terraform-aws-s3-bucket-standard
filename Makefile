@@ -24,8 +24,8 @@ DOCKER = docker build \
 fmt:
 	$(DOCKER) terraform fmt -recursive .
 
-test:
-	$(DOCKER) "cd test && go test $(TEST_ARGS)"
+test: validate fmt-check
+	$(DOCKER) "cd test && go test $(TEST_ARGS) --parallel 5"
 
 fmt-check:
 	$(DOCKER) terraform fmt --recursive --check .
