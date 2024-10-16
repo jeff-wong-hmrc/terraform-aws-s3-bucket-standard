@@ -33,7 +33,7 @@ locals {
 
 module "bucket" {
   source                     = "hmrc/s3-bucket-core/aws"
-  version                    = "~> 3.0.0"
+  version                    = "~> 3.0.1"
   bucket_name                = var.bucket_name
   versioning_enabled         = var.versioning_enabled
   data_expiry                = var.data_expiry
