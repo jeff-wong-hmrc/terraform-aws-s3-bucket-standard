@@ -32,7 +32,8 @@ locals {
 }
 
 module "bucket" {
-  source                     = "github.com/hmrc/terraform-aws-s3-bucket-core?ref=3.0.1"
+  source                     = "hmrc/s3-bucket-core/aws"
+  version                    = "3.0.1"
   bucket_name                = var.bucket_name
   versioning_enabled         = var.versioning_enabled
   data_expiry                = var.data_expiry
